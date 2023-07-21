@@ -14,6 +14,7 @@ struct DetailView: View {
     let count: Int
     let index: Int
     @State private var isCreditsPresented: Bool = false
+    @State private var isSettingsPresented: Bool = false
     
     //MARK: Functions
     
@@ -38,6 +39,18 @@ struct DetailView: View {
             HStack(alignment: .center) {
                 Image(systemName: "gear")
                     .imageScale(.large)
+                    .onTapGesture {
+                        isSettingsPresented.toggle()
+                    }
+                    .sheet(isPresented: $isSettingsPresented) {
+                        SettingsView()
+                            .toolbar {
+                                ToolbarItem(placement: .cancellationAction) {
+                                    Button("Back") { self.isSettingsPresented = false }
+                                }
+                            }
+                    }
+                    
                 Spacer()
                 Text("\(count) / \(index + 1)")
                 Spacer()
@@ -48,7 +61,12 @@ struct DetailView: View {
                     }
                     .sheet(isPresented: $isCreditsPresented) {
                         CreditsView()
-                    }
+                            .toolbar {
+                                ToolbarItem(placement: .cancellationAction) {
+                                    Button("Back") { self.isCreditsPresented = false }
+                                }
+                            }
+                    }//sheet
             }
             .foregroundColor(.secondary)
         }//VStack
